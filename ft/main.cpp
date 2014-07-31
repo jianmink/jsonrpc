@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "demo.h"
+#include "JsonRpc.h"
 #include "trace.h"
 
 #ifdef GTEST
@@ -10,7 +10,10 @@ int main()
 #endif
 {
     InfoMsg("main begin!\n");
-    demo();
+    JsonRpc rpc;
+    rpc.parse("{ \"id\":1}");
+    rpc.print();
+
     InfoMsg("main end!\n");
     return 0;
 }

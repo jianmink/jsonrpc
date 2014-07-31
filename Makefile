@@ -12,11 +12,13 @@
 #		makefile
 
 INCLUDE +=  -I inc/ \
-            -I common/inc
+            -I common/inc/ \
+            -I jsoncpp
 
 SRC_DIR  += common/src \
 			./src \
-			./ft
+			./ft \
+			./jsoncpp
 
 GMOCK_DIR= ../gmock-1.7.0
 
@@ -25,6 +27,8 @@ TARGET := my_demo
 
 CXX := gcc
 CXXFLAGS += -fmessage-length=0
+
+LIBS += -lstdc++
 
 # common make pattern
 include make.base
