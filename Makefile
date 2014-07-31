@@ -15,7 +15,8 @@ INCLUDE +=  -I inc/ \
             -I common/inc
 
 SRC_DIR  += common/src \
-			./src
+			./src \
+			./ft
 
 GMOCK_DIR= ../gmock-1.7.0
 
