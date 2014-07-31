@@ -1,0 +1,79 @@
+
+##################################################################
+#		GTEST PART
+##################################################################
+ifeq ($(TEST),1)
+GTEST_DIR = $(GMOCK_DIR)/gtest
+TEST_DIR = test
+TEST_BIN_DIR = obj
+
+INCLUDE +=  -I$(GTEST_DIR)/include \
+			-I$(GMOCK_DIR)/include \
+			-I$(TEST_DIR)/ 
+			
+CXX=g++
+CXXFLAGS += -DGTEST
+OBJS +=	$(TEST_OBJS)
+
+TEST_SRC= $(notdir $(wildcard $(TEST_DIR)/*.cpp))
+TEST_OBJS =  $(addprefix $(TEST_BIN_DIR)/, $(TEST_SRC:%.cpp=%.o))
+
+$(TEST_BIN_DIR)/%.o: $(TEST_DIR)/%.cpp 
+	@echo "Compiling $< $@"
+	@$(CXX) $(INCLUDE) $(CXXFLAGS) -c $< -o $@
+
+LIBS += $(GMOCK_DIR)/make/libgmock_main.a
+endif
+
+##################################################################
+#		PRODUCT COMMON PART
+##################################################################
+OBJS +=	$(C_OBJS) $(CXX_OBJS)	
+
+#$(foreach variable,list,body)
+find_c_files = $(wildcard $(dir)/*.c)
+C_SRC= $(foreach dir, $(SRC_DIR), $(notdir $(find_c_files)))
+C_OBJS= $(addprefix $(BIN_DIR)/, $(C_SRC:%.c=%.o))
+
+find_cpp_files = $(wildcard $(dir)/*.cpp)
+CXX_SRC= $(foreach dir, $(SRC_DIR), $(notdir $(find_cpp_files)))
+CXX_OBJS= $(addprefix $(BIN_DIR)/, $(CXX_SRC:%.cpp=%.o))
+
+
+define make-c
+$(BIN_DIR)/%.o: $1/%.c
+	@echo "Compiling $$< $$@"
+	@$(CXX) $(INCLUDE) $(CXXFLAGS) -c $$< -o $$@
+endef
+
+define make-cpp
+$(BIN_DIR)/%.o: $1/%.cpp
+	@echo "Compiling $$< $$@"
+	@$(CXX) $(INCLUDE) $(CXXFLAGS) -c $$< -o $$@
+endef
+
+#eval is to feed text directly to the make parser
+$(foreach dir, $(SRC_DIR), $(eval $(call make-c,$(dir)))) 
+$(foreach dir, $(SRC_DIR), $(eval $(call make-cpp,$(dir)))) 
+
+
+##################################################################
+#		MAKE COMMON PART
+##################################################################
+ifeq ($(TEST),1)
+TARGET := $(TARGET)_test
+endif
+
+all: $(TARGET)
+	./$(TARGET)
+	
+clean:
+	rm -f $(OBJS) $(BIN_DIR)/*.o $(TARGET)
+
+CXXFLAGS += -g -Wall -fmessage-length=0
+
+$(TARGET) : $(OBJS)
+	@echo "Link -o $@ $^ "
+	@$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LIBS) -lpthread
+
+.PHONY: all clean 
