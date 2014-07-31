@@ -22,7 +22,7 @@ $(TEST_BIN_DIR)/%.o: $(TEST_DIR)/%.cpp
 	@echo "Compiling $< $@"
 	@$(CXX) $(INCLUDE) $(CXXFLAGS) -c $< -o $@
 
-LIBS += $(GMOCK_DIR)/make/libgmock_main.a
+LIBS += $(GMOCK_DIR)/make/gmock_main.a
 endif
 
 ##################################################################

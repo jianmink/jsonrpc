@@ -17,13 +17,13 @@ INCLUDE +=  -I inc/ \
 SRC_DIR  += common/src \
 			./src
 
-GMOCK_DIR= ../../3PP/gmock-1.6.0
+GMOCK_DIR= ../gmock-1.7.0
 
 BIN_DIR = obj
 TARGET := my_demo
 
 CXX := gcc
-CXXFLAGS += -m32 -fmessage-length=0
+CXXFLAGS += -fmessage-length=0
 
 # common make pattern
 include make.base
